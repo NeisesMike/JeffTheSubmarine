@@ -18,28 +18,22 @@ namespace JefftheSubmarine
         {
             get
             {
-                VehiclePilotSeat vps = new VehiclePilotSeat();
                 Transform mainSeat = transform.Find("PilotSeat");
-                vps.Seat = mainSeat.gameObject;
-                vps.SitLocation = mainSeat.Find("SitLocation").gameObject;
-                vps.LeftHandLocation = mainSeat;
-                vps.RightHandLocation = mainSeat;
-                vps.ExitLocation = mainSeat.Find("ExitLocation");
-                return vps;
+                return new VehiclePilotSeat
+                {
+                    Seat = mainSeat.gameObject,
+                    SitLocation = mainSeat.Find("SitLocation").gameObject,
+                    LeftHandLocation = mainSeat,
+                    RightHandLocation = mainSeat,
+                    ExitLocation = mainSeat.Find("ExitLocation")
+                };
             }
         }
-
-        public override GameObject VehicleModel
-        {
-            get
-            {
-                return model;
-            }
-        }
+        public override GameObject VehicleModel => model;
         public static IEnumerator Register()
         {
             GetAssets();
-            ModVehicle JefftheSubmarine = Radical.EnsureComponent<JefftheSubmarine>(model);
+            ModVehicle JefftheSubmarine = model.EnsureComponent<JefftheSubmarine>();
             JefftheSubmarine.name = "JefftheSubmarine";
             yield return UWE.CoroutineHost.StartCoroutine(VehicleRegistrar.RegisterVehicle(JefftheSubmarine));
             DealDamageOnImpact ddoi = model.GetComponent<DealDamageOnImpact>();
@@ -48,76 +42,48 @@ namespace JefftheSubmarine
             ddoi.mirroredSelfDamageFraction = 0.1f;
             ddoi.minDamageInterval = 0.7f;
         }
-
         public override List<VehicleHatchStruct> Hatches
         {
             get
             {
-                var list = new List<VehicleHatchStruct>();
-
-                VehicleHatchStruct interior_vhs = new VehicleHatchStruct();
                 Transform intHatch = transform.Find("Hatches/InsideHatch");
-                interior_vhs.Hatch = intHatch.gameObject;
-                interior_vhs.EntryLocation = intHatch.Find("Entry");
-                interior_vhs.ExitLocation = intHatch.Find("Exit");
-                interior_vhs.SurfaceExitLocation = intHatch.Find("SurfaceExit");
-
-                VehicleHatchStruct exterior_vhs = new VehicleHatchStruct();
                 Transform extHatch = transform.Find("Hatches/OutsideHatch");
-                exterior_vhs.Hatch = extHatch.gameObject;
-                exterior_vhs.EntryLocation = interior_vhs.EntryLocation;
-                exterior_vhs.ExitLocation = interior_vhs.ExitLocation;
-                exterior_vhs.SurfaceExitLocation = interior_vhs.SurfaceExitLocation;
 
-                list.Add(interior_vhs);
-                list.Add(exterior_vhs);
-                return list;
+                VehicleHatchStruct interior_vhs = new VehicleHatchStruct
+                {
+                    Hatch = intHatch.gameObject,
+                    EntryLocation = intHatch.Find("Entry"),
+                    ExitLocation = intHatch.Find("Exit"),
+                    SurfaceExitLocation = intHatch.Find("SurfaceExit")
+                };
+
+                VehicleHatchStruct exterior_vhs = new VehicleHatchStruct
+                {
+                    Hatch = extHatch.gameObject,
+                    EntryLocation = interior_vhs.EntryLocation,
+                    ExitLocation = interior_vhs.ExitLocation,
+                    SurfaceExitLocation = interior_vhs.SurfaceExitLocation
+                };
+
+                return new List<VehicleHatchStruct>
+                {
+                    interior_vhs,
+                    exterior_vhs
+                };
             }
         }
-        public override BoxCollider BoundingBoxCollider
-        {
-            get
-            {
-                return transform.Find("BoundingBoxCollider").gameObject.GetComponent<BoxCollider>();
-            }
-        }
-
+        public override BoxCollider BoundingBoxCollider => transform.Find("BoundingBoxCollider").gameObject.GetComponent<BoxCollider>();
         public static void GetAssets()
         {
             model = MainPatcher.theUltimateBundleOfAssets.LoadAsset<GameObject>("Jeff");
-
             pingSprite = (MainPatcher.epicAtlasOfSprites.GetSprite("JeffPingSprite"));
             crafterSprite = (MainPatcher.epicAtlasOfSprites.GetSprite("JeffRegularSprite"));
         }
-        public override GameObject[] CollisionModel
-        {
-            get
-            {
-                return new GameObject[] { transform.Find("CollisionModel").gameObject };
-            }
-        }
-
-        public override GameObject StorageRootObject
-        {
-            get
-            {
-                return transform.Find("StorageRoot").gameObject;
-            }
-        }
-
-        public override GameObject ModulesRootObject
-        {
-            get
-            {
-                return transform.Find("ModulesRoot").gameObject;
-            }
-        }
-
+        public override GameObject[] CollisionModel => new GameObject[] { transform.Find("CollisionModel").gameObject };
         public override List<VehicleStorage> InnateStorages
         {
             get
             {
-                var list = new List<VehicleStorage>();
 
                 Transform innate1 = transform.Find("InnateStorages/Storage1");
                 Transform innate2 = transform.Find("InnateStorages/Storage2");
@@ -128,150 +94,186 @@ namespace JefftheSubmarine
                 Transform innate7 = transform.Find("InnateStorages/Storage7");
                 Transform innate8 = transform.Find("InnateStorages/Storage8");
 
-                VehicleStorage IS1 = new VehicleStorage();
-                IS1.Container = innate1.gameObject;
-                IS1.Height = 8;
-                IS1.Width = 8;
-                list.Add(IS1);
-                VehicleStorage IS2 = new VehicleStorage();
-                IS2.Container = innate2.gameObject;
-                IS2.Height = 8;
-                IS2.Width = 8;
-                list.Add(IS2);
-                VehicleStorage IS3 = new VehicleStorage();
-                IS3.Container = innate3.gameObject;
-                IS3.Height = 8;
-                IS3.Width = 8;
-                list.Add(IS3);
-                VehicleStorage IS4 = new VehicleStorage();
-                IS4.Container = innate4.gameObject;
-                IS4.Height = 8;
-                IS4.Width = 8;
-                list.Add(IS4);
-                VehicleStorage IS5 = new VehicleStorage();
-                IS5.Container = innate5.gameObject;
-                IS5.Height = 3;
-                IS5.Width = 3;
-                list.Add(IS5);
-                VehicleStorage IS6 = new VehicleStorage();
-                IS6.Container = innate6.gameObject;
-                IS6.Height = 3;
-                IS6.Width = 3;
-                list.Add(IS6);
-                VehicleStorage IS7 = new VehicleStorage();
-                IS7.Container = innate7.gameObject;
-                IS7.Height = 6;
-                IS7.Width = 5;
-                list.Add(IS7);
-                VehicleStorage IS8 = new VehicleStorage();
-                IS8.Container = innate8.gameObject;
-                IS8.Height = 6;
-                IS8.Width = 5;
-                list.Add(IS8);
-
-                return list;
+                VehicleStorage IS1 = new VehicleStorage
+                {
+                    Container = innate1.gameObject,
+                    Height = 8,
+                    Width = 8
+                };
+                VehicleStorage IS2 = new VehicleStorage
+                {
+                    Container = innate2.gameObject,
+                    Height = 8,
+                    Width = 8
+                };
+                VehicleStorage IS3 = new VehicleStorage
+                {
+                    Container = innate3.gameObject,
+                    Height = 8,
+                    Width = 8
+                };
+                VehicleStorage IS4 = new VehicleStorage
+                {
+                    Container = innate4.gameObject,
+                    Height = 8,
+                    Width = 8
+                };
+                VehicleStorage IS5 = new VehicleStorage
+                {
+                    Container = innate5.gameObject,
+                    Height = 3,
+                    Width = 3
+                };
+                VehicleStorage IS6 = new VehicleStorage
+                {
+                    Container = innate6.gameObject,
+                    Height = 3,
+                    Width = 3
+                };
+                VehicleStorage IS7 = new VehicleStorage
+                {
+                    Container = innate7.gameObject,
+                    Height = 6,
+                    Width = 5
+                };
+                VehicleStorage IS8 = new VehicleStorage
+                {
+                    Container = innate8.gameObject,
+                    Height = 6,
+                    Width = 5
+                };
+                return new List<VehicleStorage>
+                {
+                    IS1,
+                    IS2,
+                    IS3,
+                    IS4,
+                    IS5,
+                    IS6,
+                    IS7,
+                    IS8
+                };
             }
         }
-
         public override List<VehicleUpgrades> Upgrades
         {
             get
             {
-                var list = new List<VehicleUpgrades>();
-                VehicleUpgrades vu = new VehicleUpgrades();
-                vu.Interface = transform.Find("Upgrades").gameObject;
+                VehicleUpgrades vu = new VehicleUpgrades
+                {
+                    Interface = transform.Find("Upgrades").gameObject
+                };
                 vu.Flap = vu.Interface;
-                list.Add(vu);
-                return list;
+                return new List<VehicleUpgrades>
+                {
+                    vu
+                };
             }
         }
-
         public override List<VehicleBattery> Batteries
         {
             get
             {
-                var list = new List<VehicleBattery>();
+                VehicleBattery vb1 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery1").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb1 = new VehicleBattery();
-                vb1.BatterySlot = transform.Find("Batteries/Battery1").gameObject;
-                vb1.BatteryProxy = null;
-                list.Add(vb1);
+                VehicleBattery vb2 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery2").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb2 = new VehicleBattery();
-                vb2.BatterySlot = transform.Find("Batteries/Battery2").gameObject;
-                vb2.BatteryProxy = null;
-                list.Add(vb2);
+                VehicleBattery vb3 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery3").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb3 = new VehicleBattery();
-                vb3.BatterySlot = transform.Find("Batteries/Battery3").gameObject;
-                vb3.BatteryProxy = null;
-                list.Add(vb3);
+                VehicleBattery vb4 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery4").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb4 = new VehicleBattery();
-                vb4.BatterySlot = transform.Find("Batteries/Battery4").gameObject;
-                vb4.BatteryProxy = null;
-                list.Add(vb4);
+                VehicleBattery vb5 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery5").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb5 = new VehicleBattery();
-                vb5.BatterySlot = transform.Find("Batteries/Battery5").gameObject;
-                vb5.BatteryProxy = null;
-                list.Add(vb5);
+                VehicleBattery vb6 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery6").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb6 = new VehicleBattery();
-                vb6.BatterySlot = transform.Find("Batteries/Battery6").gameObject;
-                vb6.BatteryProxy = null;
-                list.Add(vb6);
+                VehicleBattery vb7 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery7").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb7 = new VehicleBattery();
-                vb7.BatterySlot = transform.Find("Batteries/Battery7").gameObject;
-                vb7.BatteryProxy = null;
-                list.Add(vb7);
+                VehicleBattery vb8 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery8").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb8 = new VehicleBattery();
-                vb8.BatterySlot = transform.Find("Batteries/Battery8").gameObject;
-                vb8.BatteryProxy = null;
-                list.Add(vb8);
+                VehicleBattery vb9 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery9").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb9 = new VehicleBattery();
-                vb9.BatterySlot = transform.Find("Batteries/Battery9").gameObject;
-                vb9.BatteryProxy = null;
-                list.Add(vb9);
+                VehicleBattery vb10 = new VehicleBattery
+                {
+                    BatterySlot = transform.Find("Batteries/Battery10").gameObject,
+                    BatteryProxy = null
+                };
 
-                VehicleBattery vb10 = new VehicleBattery();
-                vb10.BatterySlot = transform.Find("Batteries/Battery10").gameObject;
-                vb10.BatteryProxy = null;
-                list.Add(vb10);
-
-                return list;
+                return new List<VehicleBattery>
+                {
+                    vb1,
+                    vb2,
+                    vb3,
+                    vb4,
+                    vb5,
+                    vb6,
+                    vb7,
+                    vb8,
+                    vb9,
+                    vb10
+                };
             }
         }
         public override List<VehicleFloodLight> HeadLights
         {
             get
             {
-                var list = new List<VehicleFloodLight>();
-
-                list.Add(new VehicleFloodLight
+                return new List<VehicleFloodLight>
                 {
-                    Light = transform.Find("lights_parent/Headlights/R").gameObject,
-                    Angle = 70,
-                    Color = Color.white,
-                    Intensity = 1.3f,
-                    Range = 90f
-                });
-                list.Add(new VehicleFloodLight
-                {
-                    Light = transform.Find("lights_parent/Headlights/L").gameObject,
-                    Angle = 70,
-                    Color = Color.white,
-                    Intensity = 1.3f,
-                    Range = 90f
-                });
-
-                return list;
+                    new VehicleFloodLight
+                    {
+                        Light = transform.Find("lights_parent/Headlights/R").gameObject,
+                        Angle = 70,
+                        Color = Color.white,
+                        Intensity = 1.3f,
+                        Range = 90f
+                    },
+                    new VehicleFloodLight
+                    {
+                        Light = transform.Find("lights_parent/Headlights/L").gameObject,
+                        Angle = 70,
+                        Color = Color.white,
+                        Intensity = 1.3f,
+                        Range = 90f
+                    }
+                };
             }
         }
-
         public override List<GameObject> WaterClipProxies
         {
             get
@@ -284,7 +286,6 @@ namespace JefftheSubmarine
                 return list;
             }
         }
-
         public override List<GameObject> TetherSources
         {
             get
@@ -298,51 +299,23 @@ namespace JefftheSubmarine
 
             }
         }
-
-
         public override Dictionary<TechType, int> Recipe
         {
             get
             {
                 return new Dictionary<TechType, int>()
-        {
-            {
-                TechType.EnameledGlass, 2
-            },
-            {
-                TechType.PlasteelIngot, 2
-            },
-                                {
-                TechType.TitaniumIngot, 1
-            },
-            {
-                TechType.PowerCell, 4
-            },
-            {
-                TechType.Lubricant, 2
-            },
-                        {
-                TechType.Lead, 2
-            }
-        };
+                {
+                    {TechType.EnameledGlass, 2},
+                    {TechType.PlasteelIngot, 2},
+                    {TechType.TitaniumIngot, 1},
+                    {TechType.PowerCell, 4},
+                    {TechType.Lubricant, 2},
+                    {TechType.Lead, 2 }
+                };
             }
         }
-
-        public override Sprite PingSprite
-        {
-            get
-            {
-                return JefftheSubmarine.pingSprite;
-            }
-        }
-
-        public override Sprite CraftingSprite
-        {
-            get
-            {
-                return JefftheSubmarine.crafterSprite;
-            }
-        }
+        public override Sprite PingSprite => JefftheSubmarine.pingSprite;
+        public override Sprite CraftingSprite => JefftheSubmarine.crafterSprite;
         public override string Description
         {
             get
@@ -350,7 +323,6 @@ namespace JefftheSubmarine
                 return "A Small form factor vehicle used primarily for short to medium length operations.";
             }
         }
-
         public override string EncyclopediaEntry
         {
             get
@@ -375,68 +347,12 @@ namespace JefftheSubmarine
                 return str + "\n\'My name Jeff.\'\n";
             }
         }
-
-        public override int BaseCrushDepth
-        {
-            get
-            {
-                return 500;
-            }
-        }
-
-        public override int CrushDepthUpgrade1
-        {
-            get
-            {
-                return 250;
-            }
-        }
-
-        public override int CrushDepthUpgrade2
-        {
-            get
-            {
-                return 250;
-            }
-        }
-
-        public override int CrushDepthUpgrade3
-        {
-            get
-            {
-                return 1000;
-            }
-        }
-        public override int MaxHealth
-        {
-            get
-            {
-                return 2000;
-            }
-        }
-
-        public override int Mass
-        {
-            get
-            {
-                return 100;
-            }
-        }
-
-        public override int NumModules
-        {
-            get
-            {
-                return 8;
-            }
-        }
-
-        public override bool HasArms
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override int BaseCrushDepth => 500;
+        public override int CrushDepthUpgrade1 => 250;
+        public override int CrushDepthUpgrade2 => 250;
+        public override int CrushDepthUpgrade3 => 1000;
+        public override int MaxHealth => 2000;
+        public override int Mass => 100;
+        public override int NumModules => 8;
     }
 }
