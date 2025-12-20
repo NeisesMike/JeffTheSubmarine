@@ -1,19 +1,12 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using UnityEngine;
 using VehicleFramework;
-using VehicleFramework.VehicleParts;
 using VehicleFramework.VehicleTypes;
-using VehicleFramework.Engines;
-using Nautilus;
-using static Nautilus.Utility.MaterialUtils;
+using VehicleFramework.Admin;
+using VehicleFramework.VehicleBuilding;
 
-namespace JeffTheSubmarine
+namespace JefftheSubmarine
 {
     public class JefftheSubmarine : Submarine
     {
@@ -21,21 +14,18 @@ namespace JeffTheSubmarine
         public static Sprite pingSprite;
         public static Sprite crafterSprite;
 
-        public override List<VehiclePilotSeat> PilotSeats
+        public override VehiclePilotSeat PilotSeat
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehiclePilotSeat>();
-                VehicleFramework.VehicleParts.VehiclePilotSeat vps = new VehicleFramework.VehicleParts.VehiclePilotSeat();
+                VehiclePilotSeat vps = new VehiclePilotSeat();
                 Transform mainSeat = transform.Find("PilotSeat");
                 vps.Seat = mainSeat.gameObject;
                 vps.SitLocation = mainSeat.Find("SitLocation").gameObject;
                 vps.LeftHandLocation = mainSeat;
                 vps.RightHandLocation = mainSeat;
                 vps.ExitLocation = mainSeat.Find("ExitLocation");
-                // TODO exit location
-                list.Add(vps);
-                return list;
+                return vps;
             }
         }
 
@@ -63,16 +53,16 @@ namespace JeffTheSubmarine
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleHatchStruct>();
+                var list = new List<VehicleHatchStruct>();
 
-                VehicleFramework.VehicleParts.VehicleHatchStruct interior_vhs = new VehicleFramework.VehicleParts.VehicleHatchStruct();
+                VehicleHatchStruct interior_vhs = new VehicleHatchStruct();
                 Transform intHatch = transform.Find("Hatches/InsideHatch");
                 interior_vhs.Hatch = intHatch.gameObject;
                 interior_vhs.EntryLocation = intHatch.Find("Entry");
                 interior_vhs.ExitLocation = intHatch.Find("Exit");
                 interior_vhs.SurfaceExitLocation = intHatch.Find("SurfaceExit");
 
-                VehicleFramework.VehicleParts.VehicleHatchStruct exterior_vhs = new VehicleFramework.VehicleParts.VehicleHatchStruct();
+                VehicleHatchStruct exterior_vhs = new VehicleHatchStruct();
                 Transform extHatch = transform.Find("Hatches/OutsideHatch");
                 exterior_vhs.Hatch = extHatch.gameObject;
                 exterior_vhs.EntryLocation = interior_vhs.EntryLocation;
@@ -99,11 +89,11 @@ namespace JeffTheSubmarine
             pingSprite = (MainPatcher.epicAtlasOfSprites.GetSprite("JeffPingSprite"));
             crafterSprite = (MainPatcher.epicAtlasOfSprites.GetSprite("JeffRegularSprite"));
         }
-        public override GameObject CollisionModel
+        public override GameObject[] CollisionModel
         {
             get
             {
-                return transform.Find("CollisionModel").gameObject;
+                return new GameObject[] { transform.Find("CollisionModel").gameObject };
             }
         }
 
@@ -127,7 +117,7 @@ namespace JeffTheSubmarine
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleStorage>();
+                var list = new List<VehicleStorage>();
 
                 Transform innate1 = transform.Find("InnateStorages/Storage1");
                 Transform innate2 = transform.Find("InnateStorages/Storage2");
@@ -138,42 +128,42 @@ namespace JeffTheSubmarine
                 Transform innate7 = transform.Find("InnateStorages/Storage7");
                 Transform innate8 = transform.Find("InnateStorages/Storage8");
 
-                VehicleFramework.VehicleParts.VehicleStorage IS1 = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage IS1 = new VehicleStorage();
                 IS1.Container = innate1.gameObject;
                 IS1.Height = 8;
                 IS1.Width = 8;
                 list.Add(IS1);
-                VehicleFramework.VehicleParts.VehicleStorage IS2 = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage IS2 = new VehicleStorage();
                 IS2.Container = innate2.gameObject;
                 IS2.Height = 8;
                 IS2.Width = 8;
                 list.Add(IS2);
-                VehicleFramework.VehicleParts.VehicleStorage IS3 = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage IS3 = new VehicleStorage();
                 IS3.Container = innate3.gameObject;
                 IS3.Height = 8;
                 IS3.Width = 8;
                 list.Add(IS3);
-                VehicleFramework.VehicleParts.VehicleStorage IS4 = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage IS4 = new VehicleStorage();
                 IS4.Container = innate4.gameObject;
                 IS4.Height = 8;
                 IS4.Width = 8;
                 list.Add(IS4);
-                VehicleFramework.VehicleParts.VehicleStorage IS5 = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage IS5 = new VehicleStorage();
                 IS5.Container = innate5.gameObject;
                 IS5.Height = 3;
                 IS5.Width = 3;
                 list.Add(IS5);
-                VehicleFramework.VehicleParts.VehicleStorage IS6 = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage IS6 = new VehicleStorage();
                 IS6.Container = innate6.gameObject;
                 IS6.Height = 3;
                 IS6.Width = 3;
                 list.Add(IS6);
-                VehicleFramework.VehicleParts.VehicleStorage IS7 = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage IS7 = new VehicleStorage();
                 IS7.Container = innate7.gameObject;
                 IS7.Height = 6;
                 IS7.Width = 5;
                 list.Add(IS7);
-                VehicleFramework.VehicleParts.VehicleStorage IS8 = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage IS8 = new VehicleStorage();
                 IS8.Container = innate8.gameObject;
                 IS8.Height = 6;
                 IS8.Width = 5;
@@ -187,8 +177,8 @@ namespace JeffTheSubmarine
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleUpgrades>();
-                VehicleFramework.VehicleParts.VehicleUpgrades vu = new VehicleFramework.VehicleParts.VehicleUpgrades();
+                var list = new List<VehicleUpgrades>();
+                VehicleUpgrades vu = new VehicleUpgrades();
                 vu.Interface = transform.Find("Upgrades").gameObject;
                 vu.Flap = vu.Interface;
                 list.Add(vu);
@@ -259,9 +249,9 @@ namespace JeffTheSubmarine
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleFloodLight>();
+                var list = new List<VehicleFloodLight>();
 
-                list.Add(new VehicleFramework.VehicleParts.VehicleFloodLight
+                list.Add(new VehicleFloodLight
                 {
                     Light = transform.Find("lights_parent/Headlights/R").gameObject,
                     Angle = 70,
@@ -269,7 +259,7 @@ namespace JeffTheSubmarine
                     Intensity = 1.3f,
                     Range = 90f
                 });
-                list.Add(new VehicleFramework.VehicleParts.VehicleFloodLight
+                list.Add(new VehicleFloodLight
                 {
                     Light = transform.Find("lights_parent/Headlights/L").gameObject,
                     Angle = 70,
@@ -292,14 +282,6 @@ namespace JeffTheSubmarine
                     list.Add(child.gameObject);
                 }
                 return list;
-            }
-        }
-
-        public override GameObject BoundingBox
-        {
-            get
-            {
-                return transform.Find("BoundingBox").gameObject;
             }
         }
 
