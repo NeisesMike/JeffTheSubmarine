@@ -274,6 +274,18 @@ namespace JefftheSubmarine
                 };
             }
         }
+        public override List<Light> InteriorLights
+        {
+            get
+            {
+                List<Light> lights = new List<Light>();
+                foreach (Transform child in transform.Find("InteriorLight"))
+                {
+                    lights.Add(child.GetComponent<Light>());
+                }
+                return lights;
+            }
+        }
         public override List<GameObject> WaterClipProxies
         {
             get
