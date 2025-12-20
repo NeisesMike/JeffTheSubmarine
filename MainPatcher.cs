@@ -1,41 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using BepInEx;
+using UnityEngine;
+using UnityEngine.U2D;
+using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using VehicleFramework.VehicleTypes;
-using System.Collections;
-using VehicleFramework;
-using JefftheSubmarine;
-using BepInEx;
-using HarmonyLib;
-using Nautilus.Utility;
 
 namespace JefftheSubmarine
 {
-    public static class Logger
-    {
-        public static void Log(string message)
-        {
-            UnityEngine.Debug.Log("[JefftheSubmarine]:" + message);
-        }
-        public static void Output(string msg)
-        {
-            BasicText message = new BasicText(500, 0);
-            message.ShowMessage(msg, 5);
-        }
-    }
-    [BepInPlugin("com.royalty.subnautica.JeffTheSubmarine.mod", "JeffTheSubmarine", "2.2.9")]
-    [BepInDependency("com.mikjaw.subnautica.vehicleframework.mod")]
-    [BepInDependency("com.snmodding.nautilus")]
-    [BepInDependency("com.royalty.subnautica.RoyalCommonalities.mod")]
-
+    [BepInPlugin(MyGUID, PluginName, VersionString)]
+    [BepInDependency(VehicleFramework.PluginInfo.PLUGIN_GUID, VehicleFramework.PluginInfo.PLUGIN_VERSION)]
+    [BepInDependency(Nautilus.PluginInfo.PLUGIN_GUID, Nautilus.PluginInfo.PLUGIN_VERSION)]
     public class MainPatcher : BaseUnityPlugin
     {
+        private const string MyGUID = "com.Phoenix.Jeff";
+        private const string PluginName = "JefftheSubmarine";
+        private const string VersionString = "2.0.0";
+
+        private static readonly string modFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static AssetBundle theUltimateBundleOfAssets;
+        public static SpriteAtlas epicAtlasOfSprites;
         public void Start()
         {
-            var harmony = new Harmony("com.royalty.subnautica.JeffTheSubmarine.mod");
-            harmony.PatchAll();
+            theUltimateBundleOfAssets = AssetBundle.LoadFromFile(Path.Combine(modFolder, "Assets/jeffthesubmarine"));
+            epicAtlasOfSprites = theUltimateBundleOfAssets.LoadAsset<SpriteAtlas>("SpriteAtlas");
             UWE.CoroutineHost.StartCoroutine(JefftheSubmarine.Register());
         }
     }
