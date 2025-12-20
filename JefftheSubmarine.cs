@@ -354,5 +354,10 @@ namespace JefftheSubmarine
         public override int MaxHealth => 2000;
         public override int Mass => 100;
         public override int NumModules => 8;
+        public override void Start()
+        {
+            base.Start();
+            transform.Find("Control-Panel-Location/Control-Panel").gameObject.AddComponent<VehicleFramework.ControlPanel.ControlPanel>().mv = this;
+        }
     }
 }
