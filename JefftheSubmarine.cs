@@ -274,6 +274,18 @@ namespace JefftheSubmarine
                 };
             }
         }
+        public override List<Light> InteriorLights
+        {
+            get
+            {
+                List<Light> lights = new List<Light>();
+                foreach (Transform child in transform.Find("InteriorLight"))
+                {
+                    lights.Add(child.GetComponent<Light>());
+                }
+                return lights;
+            }
+        }
         public override List<GameObject> WaterClipProxies
         {
             get
@@ -354,5 +366,10 @@ namespace JefftheSubmarine
         public override int MaxHealth => 2000;
         public override int Mass => 100;
         public override int NumModules => 8;
+        public override void Start()
+        {
+            base.Start();
+            transform.Find("Control-Panel-Location/Control-Panel").gameObject.AddComponent<VehicleFramework.ControlPanel.ControlPanel>().mv = this;
+        }
     }
 }
